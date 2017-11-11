@@ -143,13 +143,15 @@ var PubSub = __webpack_require__(4);
 var Game = function(){
 	this.state = [];
 
+	// Create initial board state - for each row (20)
 	for(var i=0; i<=19; i++){
-		this.state.push([]);
+		// Create a row full of 20 false values
+		var row = Array.apply(null, Array(20)).map(function(){ return false });
+		this.state.push(row);
 	}
 
-	PubSub.publish("/game/board", this.state);
-
-	setInterval(this.tick.bind(this), 1000);
+	// announce that we've created the initial state
+	this.publish();
 };
 
 Game.prototype = {
@@ -163,8 +165,12 @@ Game.prototype = {
 			}
 			newState.push(newRow);
 		}
+
 		this.state = newState;
 
+		this.publish();
+	},
+	publish(){
 		PubSub.publish("/game/board", this.state);
 	}
 };
