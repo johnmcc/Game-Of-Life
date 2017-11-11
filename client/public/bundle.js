@@ -146,14 +146,10 @@ var PubSub = __webpack_require__(4);
 var Game = function(){
 	// Create initial board state - for each row (20)
 	this.state = [];
-	for(var i=0; i<=19; i++){
-		// Create a row full of 20 false values
-		var row = Array.apply(null, Array(20)).map(function(){ return false });
-		this.state.push(row);
-	}
+	this.resetState();
 
 	// can be changed by /form/changespeed
-	this.speed = 500;
+	this.speed = 1000;
 
 	// Will store the return value of setInterval, for stopping later
 	this.interval;
@@ -166,6 +162,16 @@ var Game = function(){
 };
 
 Game.prototype = {
+	resetState: function(){
+		this.state = [];
+		for(var i=0; i<=19; i++){
+			// Create a row full of 20 false values
+			var row = Array.apply(null, Array(20)).map(function(){ return false });
+			this.state.push(row);
+		}
+		this.publish();
+	},
+
 	tick: function(){
 		var newState = [];
 
@@ -181,9 +187,11 @@ Game.prototype = {
 
 		this.publish();
 	},
+
 	publish(){
 		PubSub.publish("/game/board", this.state);
 	},
+
 	attachListeners(){
 		PubSub.subscribe("/form/start", function(event){
 			this.interval = setInterval(this.tick.bind(this), this.speed);
@@ -191,6 +199,11 @@ Game.prototype = {
 
 		PubSub.subscribe("/form/stop", function(event){
 			clearInterval(this.interval);
+		}.bind(this));
+
+		PubSub.subscribe("/form/reset", function(event){
+			clearInterval(this.interval);
+			this.resetState();
 		}.bind(this));
 
 		PubSub.subscribe("/form/changespeed", function(event){
@@ -233,6 +246,7 @@ var FormView = function(){
 	this.form = document.querySelector("form");
 	this.startBtn = document.getElementById("start");
 	this.stopBtn = document.getElementById("stop");
+	this.resetBtn = document.getElementById("reset");
 	this.speedSlider = document.getElementById("speed");
 
 	this.attachListeners();
@@ -249,6 +263,9 @@ FormView.prototype = {
 		// ...and the stop button
 		this.stopBtn.addEventListener("click", this.handleStopClick);
 
+		// ...and the reset button
+		this.resetBtn.addEventListener("click", this.handleResetClick);
+
 		// ...and the speed
 		this.speedSlider.addEventListener("change", this.handleSpeedChange);
 	},
@@ -260,6 +277,9 @@ FormView.prototype = {
 	},
 	handleStopClick: function(event){
 		PubSub.publish("/form/stop");
+	},
+	handleResetClick: function(event){
+		PubSub.publish("/form/reset");
 	},
 	handleSpeedChange: function(event){
 		PubSub.publish("/form/changespeed", event.target.value);
