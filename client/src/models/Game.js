@@ -30,6 +30,12 @@ Game.prototype = {
 		this.publish();
 	},
 
+	toggleElement: function(event){
+		var row = event.detail.row;
+		var column = event.detail.column;
+		this.state[row][column] = !this.state[row][column];
+	},
+
 	tick: function(){
 		var newState = [];
 
@@ -67,6 +73,8 @@ Game.prototype = {
 			this.speed = event.detail;
 			clearInterval(this.interval);
 		}.bind(this));
+
+		PubSub.subscribe("/gameview/toggleelement", this.toggleElement.bind(this));
 	}
 };
 
