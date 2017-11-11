@@ -20,6 +20,7 @@ var Game = function(){
 
 Game.prototype = {
 	resetState: function(){
+		clearInterval(this.interval);
 		this.state = [];
 		for(var i=0; i<=19; i++){
 			// Create a row full of 20 false values
@@ -59,7 +60,6 @@ Game.prototype = {
 		}.bind(this));
 
 		PubSub.subscribe("/form/reset", function(event){
-			clearInterval(this.interval);
 			this.resetState();
 		}.bind(this));
 
