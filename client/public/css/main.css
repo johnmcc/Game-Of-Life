@@ -1,0 +1,36 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	background: #333;
+}
+
+h1 {
+	color: #ccc;
+}
+
+#game {
+	box-sizing: border-box;
+	border: 1px solid #ba000d;
+	width: 502px;
+	margin: 20px auto;
+	display: -webkit-flex;
+	display: -ms-flex;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.cell {
+	width: 25px;
+	height: 25px;
+	display: inline-block;
+	box-sizing: border-box;
+	transition: all .1s ease-in;
+}
+
+.cell-on {
+	background: #ba000d;
+}
+
+.cell-off {
+	border: 1px solid #ba000d;
+}
