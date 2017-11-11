@@ -3,6 +3,9 @@ var PubSub = require("../helpers/PubSub");
 var Game = function(){
 	this.state = [];
 
+	// Will store the return value of setInterval, for stopping later
+	this.interval;
+
 	// Create initial board state - for each row (20)
 	for(var i=0; i<=19; i++){
 		// Create a row full of 20 false values
@@ -12,6 +15,7 @@ var Game = function(){
 
 	// announce that we've created the initial state
 	this.publish();
+	this.attachListeners();
 };
 
 Game.prototype = {
@@ -32,6 +36,15 @@ Game.prototype = {
 	},
 	publish(){
 		PubSub.publish("/game/board", this.state);
+	},
+	attachListeners(){
+		PubSub.subscribe("/form/start", function(){
+			this.interval = setInterval(this.tick.bind(this), 750);
+		}.bind(this));
+
+		PubSub.subscribe("/form/stop", function(){
+			clearInterval(this.interval);
+		}.bind(this));
 	}
 };
 

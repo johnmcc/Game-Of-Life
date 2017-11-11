@@ -1,4 +1,5 @@
-var GameView = require("./GameView.js");
+var GameView = require("./GameView");
+var FormView = require("./FormView");
 
 var AppView = function(){
 
@@ -7,6 +8,7 @@ var AppView = function(){
 AppView.prototype = {
 	render: function(){
 		new GameView();
+		new FormView();
 	}
 };
 

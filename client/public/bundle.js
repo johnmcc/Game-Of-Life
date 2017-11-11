@@ -85,6 +85,7 @@ window.addEventListener("load", function(){
 /***/ (function(module, exports, __webpack_require__) {
 
 var GameView = __webpack_require__(2);
+var FormView = __webpack_require__(5);
 
 var AppView = function(){
 
@@ -93,6 +94,7 @@ var AppView = function(){
 AppView.prototype = {
 	render: function(){
 		new GameView();
+		new FormView();
 	}
 };
 
@@ -113,6 +115,7 @@ var GameView = function(){
 
 GameView.prototype = {
 	attachListeners: function(){
+		// when the board state "ticks", update the board
 		PubSub.subscribe("/game/board", this.render.bind(this));
 	},
 	render: function(event){
@@ -143,6 +146,9 @@ var PubSub = __webpack_require__(4);
 var Game = function(){
 	this.state = [];
 
+	// Will store the return value of setInterval, for stopping later
+	this.interval;
+
 	// Create initial board state - for each row (20)
 	for(var i=0; i<=19; i++){
 		// Create a row full of 20 false values
@@ -152,6 +158,7 @@ var Game = function(){
 
 	// announce that we've created the initial state
 	this.publish();
+	this.attachListeners();
 };
 
 Game.prototype = {
@@ -172,6 +179,15 @@ Game.prototype = {
 	},
 	publish(){
 		PubSub.publish("/game/board", this.state);
+	},
+	attachListeners(){
+		PubSub.subscribe("/form/start", function(){
+			this.interval = setInterval(this.tick.bind(this), 750);
+		}.bind(this));
+
+		PubSub.subscribe("/form/stop", function(){
+			clearInterval(this.interval);
+		}.bind(this));
 	}
 };
 
@@ -196,6 +212,44 @@ var PubSub = {
 }
 
 module.exports = PubSub;
+
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var PubSub = __webpack_require__(4);
+
+var FormView = function(){
+	this.form = document.querySelector("form");
+	this.startBtn = document.getElementById("start");
+	this.stopBtn = document.getElementById("stop");
+
+	this.attachListeners();
+};
+
+FormView.prototype = {
+	attachListeners: function(){
+		this.form.addEventListener("submit", this.nerfForm);
+
+		// hook up start button
+		this.startBtn.addEventListener("click", this.handleStartClick);
+
+		// ...and the stop button
+		this.stopBtn.addEventListener("click", this.handleStopClick);
+	},
+	nerfForm: function(event){
+		event.preventDefault();
+	},
+	handleStartClick: function(event){
+		PubSub.publish("/form/start");
+	},
+	handleStopClick: function(event){
+		PubSub.publish("/form/stop");
+	}
+};
+
+module.exports = FormView;
 
 
 /***/ })

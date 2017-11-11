@@ -8,6 +8,7 @@ var GameView = function(){
 
 GameView.prototype = {
 	attachListeners: function(){
+		// when the board state "ticks", update the board
 		PubSub.subscribe("/game/board", this.render.bind(this));
 	},
 	render: function(event){
