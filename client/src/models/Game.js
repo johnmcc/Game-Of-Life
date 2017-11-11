@@ -1,21 +1,25 @@
 var PubSub = require("../helpers/PubSub");
 
 var Game = function(){
-	this.state = [];
-
-	// Will store the return value of setInterval, for stopping later
-	this.interval;
-
 	// Create initial board state - for each row (20)
+	this.state = [];
 	for(var i=0; i<=19; i++){
 		// Create a row full of 20 false values
 		var row = Array.apply(null, Array(20)).map(function(){ return false });
 		this.state.push(row);
 	}
 
+	// can be changed by /form/changespeed
+	this.speed = 500;
+
+	// Will store the return value of setInterval, for stopping later
+	this.interval;
+
+	// Change the state when events come through
+	this.attachListeners();
+
 	// announce that we've created the initial state
 	this.publish();
-	this.attachListeners();
 };
 
 Game.prototype = {
@@ -38,11 +42,16 @@ Game.prototype = {
 		PubSub.publish("/game/board", this.state);
 	},
 	attachListeners(){
-		PubSub.subscribe("/form/start", function(){
-			this.interval = setInterval(this.tick.bind(this), 750);
+		PubSub.subscribe("/form/start", function(event){
+			this.interval = setInterval(this.tick.bind(this), this.speed);
 		}.bind(this));
 
-		PubSub.subscribe("/form/stop", function(){
+		PubSub.subscribe("/form/stop", function(event){
+			clearInterval(this.interval);
+		}.bind(this));
+
+		PubSub.subscribe("/form/changespeed", function(event){
+			this.speed = event.detail;
 			clearInterval(this.interval);
 		}.bind(this));
 	}

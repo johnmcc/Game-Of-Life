@@ -144,21 +144,25 @@ module.exports = GameView;
 var PubSub = __webpack_require__(4);
 
 var Game = function(){
-	this.state = [];
-
-	// Will store the return value of setInterval, for stopping later
-	this.interval;
-
 	// Create initial board state - for each row (20)
+	this.state = [];
 	for(var i=0; i<=19; i++){
 		// Create a row full of 20 false values
 		var row = Array.apply(null, Array(20)).map(function(){ return false });
 		this.state.push(row);
 	}
 
+	// can be changed by /form/changespeed
+	this.speed = 500;
+
+	// Will store the return value of setInterval, for stopping later
+	this.interval;
+
+	// Change the state when events come through
+	this.attachListeners();
+
 	// announce that we've created the initial state
 	this.publish();
-	this.attachListeners();
 };
 
 Game.prototype = {
@@ -181,11 +185,16 @@ Game.prototype = {
 		PubSub.publish("/game/board", this.state);
 	},
 	attachListeners(){
-		PubSub.subscribe("/form/start", function(){
-			this.interval = setInterval(this.tick.bind(this), 750);
+		PubSub.subscribe("/form/start", function(event){
+			this.interval = setInterval(this.tick.bind(this), this.speed);
 		}.bind(this));
 
-		PubSub.subscribe("/form/stop", function(){
+		PubSub.subscribe("/form/stop", function(event){
+			clearInterval(this.interval);
+		}.bind(this));
+
+		PubSub.subscribe("/form/changespeed", function(event){
+			this.speed = event.detail;
 			clearInterval(this.interval);
 		}.bind(this));
 	}
@@ -224,19 +233,24 @@ var FormView = function(){
 	this.form = document.querySelector("form");
 	this.startBtn = document.getElementById("start");
 	this.stopBtn = document.getElementById("stop");
+	this.speedSlider = document.getElementById("speed");
 
 	this.attachListeners();
 };
 
 FormView.prototype = {
 	attachListeners: function(){
+		// cancel the form submission
 		this.form.addEventListener("submit", this.nerfForm);
 
-		// hook up start button
+		// hook up the start button
 		this.startBtn.addEventListener("click", this.handleStartClick);
 
 		// ...and the stop button
 		this.stopBtn.addEventListener("click", this.handleStopClick);
+
+		// ...and the speed
+		this.speedSlider.addEventListener("change", this.handleSpeedChange);
 	},
 	nerfForm: function(event){
 		event.preventDefault();
@@ -246,6 +260,9 @@ FormView.prototype = {
 	},
 	handleStopClick: function(event){
 		PubSub.publish("/form/stop");
+	},
+	handleSpeedChange: function(event){
+		PubSub.publish("/form/changespeed", event.target.value);
 	}
 };
 
