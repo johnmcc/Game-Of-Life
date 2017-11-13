@@ -5,6 +5,7 @@ var FormView = function(){
 	this.startBtn = document.getElementById("start");
 	this.stopBtn = document.getElementById("stop");
 	this.resetBtn = document.getElementById("reset");
+	this.randomBtn = document.getElementById("random");
 	this.speedSlider = document.getElementById("speed");
 
 	this.attachListeners();
@@ -24,6 +25,9 @@ FormView.prototype = {
 		// ...and the reset button
 		this.resetBtn.addEventListener("click", this.handleResetClick);
 
+		// ...and the random button
+		this.randomBtn.addEventListener("click", this.handleRandomClick);
+
 		// ...and the speed
 		this.speedSlider.addEventListener("change", this.handleSpeedChange);
 	},
@@ -38,6 +42,9 @@ FormView.prototype = {
 	},
 	handleResetClick: function(event){
 		PubSub.publish("/form/reset");
+	},
+	handleRandomClick: function(event){
+		PubSub.publish("/form/random");
 	},
 	handleSpeedChange: function(event){
 		PubSub.publish("/form/changespeed", event.target.value);

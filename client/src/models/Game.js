@@ -38,6 +38,11 @@ Game.prototype = {
 			this.resetState();
 		}.bind(this));
 
+		PubSub.subscribe("/form/random", function(event){
+			this.resetState();
+			this.populateRandom();
+		}.bind(this));
+
 		PubSub.subscribe("/form/changespeed", function(event){
 			this.speed = event.detail;
 			clearInterval(this.interval);
@@ -113,6 +118,19 @@ Game.prototype = {
 		}.bind(this));
 
 		return newState;
+	},
+
+	populateRandom: function(){
+		var newState = [];
+		forEach(this.state, function(row, rowIndex){
+			newState[rowIndex] = [];
+			forEach(row, function(cell, cellIndex){
+				var newVal = Math.random() > 0.5 ? true:false;
+				newState[rowIndex].push(newVal);
+			});
+		});
+		this.state = newState;
+		this.publish();
 	}
 };
 
