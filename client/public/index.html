@@ -5,7 +5,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Conway's Game Of Life</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 	<link rel="stylesheet" href="./css/main.css">
+
 	<script src="/bundle.js"></script>
 </head>
 <body>
@@ -18,6 +21,12 @@
 		<input id="speed" type="range" min=250 max=500 value=500>
 	</form>
 
-	<div id="game"></div>
+	<div id="wrapper">
+		<div id="game"></div>
+		<div id="presets">
+			<h2>Preset Patterns</h2>
+		</div>
+	</div>
+
 </body>
 </html>
