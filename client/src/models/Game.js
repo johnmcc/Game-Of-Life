@@ -125,7 +125,7 @@ Game.prototype = {
 		forEach(this.state, function(row, rowIndex){
 			newState[rowIndex] = [];
 			forEach(row, function(cell, cellIndex){
-				var newVal = Math.random() > 0.5 ? true:false;
+				var newVal = Math.random() > 0.7 ? true:false;
 				newState[rowIndex].push(newVal);
 			});
 		});
