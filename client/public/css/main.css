@@ -2,15 +2,21 @@ html, body {
 	margin: 0;
 	padding: 0;
 	background: #333;
-	font-family: 'Press Start 2P', cursive;
+	font-family: 'Quicksand', sans-serif;
 }
 
 h1, h2 {
 	color: #00FF00;
+	margin: 30px 0;
+	font-family: 'Press Start 2P', cursive;
 }
 
 h1 {
 	text-align: center;
+}
+
+h2 {
+	font-size: 14px;
 }
 
 form {
@@ -28,19 +34,24 @@ button {
 	justify-content: space-around;
 }
 
-#game {
-	box-sizing: border-box;
-	border: 1px solid #ba000d;
-	width: 502px;
-	margin: 20px 0;
-	display: -webkit-flex;
-	display: -ms-flex;
-	display: flex;
-	flex-wrap: wrap;
+#gameWrapper {
+	flex: 1;
 }
 
-#presets {
+#game {
+	box-sizing: border-box;
+	width: 540px;
+	margin: 20px 0;
+	padding: 20px;
+}
 
+#info {
+	padding-top: 20px;
+	flex: 1;
+}
+
+#info p {
+	color: #fff;
 }
 
 .cell {
@@ -49,9 +60,10 @@ button {
 	display: inline-block;
 	box-sizing: border-box;
 	border: 1px solid #ba000d;
+	margin-bottom: -5px;
+	margin-right: -1px;
 }
 
 .cell-on {
 	background: #ba000d;
-	border: 1px solid #333;
 }
