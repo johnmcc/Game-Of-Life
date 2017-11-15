@@ -45,7 +45,10 @@ Game.prototype = {
 
 		PubSub.subscribe("/form/changespeed", function(event){
 			this.speed = event.detail;
-			clearInterval(this.interval);
+			if(this.interval){
+				clearInterval(this.interval);
+					this.interval = setInterval(this.tick.bind(this), this.speed);
+			}
 		}.bind(this));
 
 		PubSub.subscribe("/gameview/toggleelement", this.toggleElement.bind(this));
