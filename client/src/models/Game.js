@@ -49,7 +49,7 @@ Game.prototype = {
 			}
 		}.bind(this));
 
-		PubSub.subscribe("/gameview/toggleelement", this.board.toggleElement);
+		PubSub.subscribe("/gameview/toggleelement", this.board.toggleElement.bind(this.board));
 	},
 
 	start: function(){
