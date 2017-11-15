@@ -7,6 +7,7 @@ var FormView = function(){
 	this.resetBtn = document.getElementById("reset");
 	this.randomBtn = document.getElementById("random");
 	this.speedSlider = document.getElementById("speed");
+	this.speedDisplay = document.getElementById("speedDisplay");
 
 	this.attachListeners();
 };
@@ -30,6 +31,7 @@ FormView.prototype = {
 
 		// ...and the speed
 		this.speedSlider.addEventListener("change", this.handleSpeedChange);
+		this.speedSlider.addEventListener("input", this.handleSlide.bind(this));
 	},
 	nerfForm: function(event){
 		event.preventDefault();
@@ -48,6 +50,10 @@ FormView.prototype = {
 	},
 	handleSpeedChange: function(event){
 		PubSub.publish("/form/changespeed", event.target.value);
+	},
+	handleSlide: function(event){
+		var speed = event.target.value;
+		this.speedDisplay.innerText = "Tick Speed: " + speed + "ms";
 	}
 };
 
