@@ -1,4 +1,5 @@
 var AppView = require("./views/AppView");
+var Board = require("./models/Board");
 var Game = require("./models/Game");
 
 window.addEventListener("load", function(){
@@ -7,5 +8,6 @@ window.addEventListener("load", function(){
 	appview.render();
 
 	// Set up the model
-	new Game();
+	var board = new Board();
+	new Game(board);
 });

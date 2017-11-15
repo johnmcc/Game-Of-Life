@@ -1,11 +1,7 @@
 var PubSub = require("../helpers/PubSub");
-var get = require("lodash/get");
-var forEach = require("lodash/foreach");
 
-var Game = function(){
-	// Create initial board state
-	this.state = [];
-	this.resetState();
+var Game = function(board){
+	this.board = board;
 
 	// can be changed by /form/changespeed
 	this.speed = 250;
@@ -22,7 +18,7 @@ var Game = function(){
 
 Game.prototype = {
 	publish(){
-		PubSub.publish("/game/board", this.state);
+		PubSub.publish("/game/board", this.board.state);
 	},
 
 	attachListeners(){
@@ -35,12 +31,14 @@ Game.prototype = {
 		}.bind(this));
 
 		PubSub.subscribe("/form/reset", function(event){
-			this.resetState();
+			this.board.resetState();
+			this.publish();
 		}.bind(this));
 
 		PubSub.subscribe("/form/random", function(event){
-			this.resetState();
-			this.populateRandom();
+			this.board.resetState();
+			this.board.populateRandom();
+			this.publish();
 		}.bind(this));
 
 		PubSub.subscribe("/form/changespeed", function(event){
@@ -51,92 +49,15 @@ Game.prototype = {
 			}
 		}.bind(this));
 
-		PubSub.subscribe("/gameview/toggleelement", this.toggleElement.bind(this));
+		PubSub.subscribe("/gameview/toggleelement", this.board.toggleElement);
 	},
 
 	start: function(){
 		this.interval = setInterval(this.tick.bind(this), this.speed);
 	},
 
-	resetState: function(){
-		clearInterval(this.interval);
-		this.state = [];
-		for(var i=0; i<=19; i++){
-			// Create a row full of 20 false values
-			var row = Array.apply(null, Array(20)).map(function(){ return false });
-			this.state.push(row);
-		}
-		this.publish();
-	},
-
-	toggleElement: function(event){
-		var row = event.detail.row;
-		var column = event.detail.column;
-		this.state[row][column] = !this.state[row][column];
-	},
-
-	getActiveNeighbours: function(row, column){
-		// We're using lodash's `get` here to grab the values of each cell's
-		// neighbours, as it doesn't throw an error if the cell we try to get is
-    // undefined. Nice!
-		var neighbours = [
-			// get the values from the three cells in the row above...
-			get(this.state, [row - 1, column - 1], undefined),
-			get(this.state, [row - 1, column], undefined),
-			get(this.state, [row - 1, column + 1], undefined),
-
-			// and the value to each side of the cell
-			get(this.state, [row, column - 1], undefined),
-			get(this.state, [row, column + 1], undefined),
-
-			// and the values from the next row
-			get(this.state, [row + 1, column - 1], undefined),
-			get(this.state, [row + 1, column], undefined),
-			get(this.state, [row + 1, column + 1], undefined),
-		];
-
-		// Strip out false and undefined, leave only true values.
-    // Then, return the number of trues that are left
-		return neighbours.filter(function(cell){ return cell; }).length;
-	},
-
 	tick: function(){
-		this.state = this.mutate();
-		this.publish();
-	},
-
-	mutate: function(){
-		var newState = [];
-		forEach(this.state, function(row, rowIndex){
-			newState[rowIndex] = [];
-
-			forEach(row, function(cell, cellIndex){
-				var numNeighbours = this.getActiveNeighbours(rowIndex, cellIndex);
-				var newVal = false;
-
-				if(cell && (numNeighbours === 2 || numNeighbours === 3)){
-					newVal = true;
-				}else if(!cell && numNeighbours === 3){
-					newVal = true;
-				}
-
-				newState[rowIndex].push(newVal);
-			}.bind(this));
-		}.bind(this));
-
-		return newState;
-	},
-
-	populateRandom: function(){
-		var newState = [];
-		forEach(this.state, function(row, rowIndex){
-			newState[rowIndex] = [];
-			forEach(row, function(cell, cellIndex){
-				var newVal = Math.random() > 0.7 ? true:false;
-				newState[rowIndex].push(newVal);
-			});
-		});
-		this.state = newState;
+		this.board.mutate();
 		this.publish();
 	}
 };
