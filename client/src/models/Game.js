@@ -49,6 +49,7 @@ Game.prototype = {
 			}
 		}.bind(this));
 
+		// We have to bind to the board here, so that it can refer to this.state, for example
 		PubSub.subscribe("/gameview/toggleelement", this.board.toggleElement.bind(this.board));
 	},
 
