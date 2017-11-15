@@ -27,7 +27,7 @@ Game.prototype = {
 
 	attachListeners(){
 		PubSub.subscribe("/form/start", function(event){
-			this.interval = setInterval(this.tick.bind(this), this.speed);
+			this.start();
 		}.bind(this));
 
 		PubSub.subscribe("/form/stop", function(event){
@@ -47,11 +47,15 @@ Game.prototype = {
 			this.speed = event.detail;
 			if(this.interval){
 				clearInterval(this.interval);
-					this.interval = setInterval(this.tick.bind(this), this.speed);
+				this.start();
 			}
 		}.bind(this));
 
 		PubSub.subscribe("/gameview/toggleelement", this.toggleElement.bind(this));
+	},
+
+	start: function(){
+		this.interval = setInterval(this.tick.bind(this), this.speed);
 	},
 
 	resetState: function(){
