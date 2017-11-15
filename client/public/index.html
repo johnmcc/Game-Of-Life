@@ -14,12 +14,16 @@
 <body>
 	<h1>Conway's Game Of Life</h1>
 	<form>
-		<button id="start">Start</button>
-		<button id="stop">Stop</button>
-		<button id="reset">Reset</button>
-		<button id="random">Random</button>
-		<input id="speed" type="range" min=250 max=500 value=500 step=5>
-		<p id="speedDisplay"></p>
+		<div id="buttons">
+			<button id="start">Start</button>
+			<button id="stop">Stop</button>
+			<button id="reset">Reset</button>
+			<button id="random">Random</button>
+		</div>
+		<div id="speedControls">
+			<input id="speed" type="range" min=250 max=500 value=250 step=5>
+			<p id="speedDisplay">Tick Speed: 250ms</p>
+		</div>
 	</form>
 
 	<div id="wrapper">

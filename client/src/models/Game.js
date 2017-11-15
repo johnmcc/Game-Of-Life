@@ -8,7 +8,7 @@ var Game = function(){
 	this.resetState();
 
 	// can be changed by /form/changespeed
-	this.speed = 500;
+	this.speed = 250;
 
 	// Will store the return value of setInterval, for stopping later
 	this.interval;
