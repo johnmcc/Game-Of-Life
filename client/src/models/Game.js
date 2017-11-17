@@ -49,6 +49,13 @@ Game.prototype = {
 			}
 		}.bind(this));
 
+		PubSub.subscribe("/preset/selected", function(event){
+			clearInterval(this.interval);
+			var state = event.detail;
+			this.board.state = state;
+			this.publish();
+		}.bind(this));
+
 		// We have to bind to the board here, so that it can refer to this.state, for example
 		PubSub.subscribe("/gameview/toggleelement", this.board.toggleElement.bind(this.board));
 	},

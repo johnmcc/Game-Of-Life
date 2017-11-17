@@ -2,9 +2,12 @@ var PubSub = require("../helpers/PubSub");
 var get = require("lodash/get");
 var forEach = require("lodash/foreach");
 
+var Spaceship = require("./presets/Spaceship");
+
 var Board = function(){
 	this.state = [];
 	this.resetState();
+	this.announcePresets();
 }
 
 Board.prototype = {
@@ -81,6 +84,11 @@ Board.prototype = {
 			});
 		});
 		this.state = newState;
+	},
+
+	announcePresets: function(){
+		var presets = [Spaceship];
+		PubSub.publish("/presets", presets);
 	}
 };
 

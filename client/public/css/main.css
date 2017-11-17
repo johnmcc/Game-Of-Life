@@ -106,3 +106,11 @@ p#speedDisplay {
 .cell-on {
 	background: #ba000d;
 }
+
+#presets a, #presets a:link, #presets a:visited {
+	color: #00FF00;
+}
+
+#presets a:hover, #presets a:active, #presets a:focus {
+	text-decoration: none;
+}
