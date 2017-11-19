@@ -13,11 +13,12 @@ PresetView.prototype = {
 
 	render: function(event){
 		var presets = event.detail;
-		for(var preset of presets){
+		for(var i = 0; i<presets.length; i++){
+			var preset = presets[i];
 			var p = document.createElement("p");
 
 			var a = document.createElement("a");
-			a.dataset.state = JSON.stringify(preset.state);
+			a.dataset.index = i;
 			a.innerText = preset.name;
 			a.href = "#";
 			a.addEventListener("click", this.handlePresetClick.bind(this));
@@ -29,7 +30,7 @@ PresetView.prototype = {
 
 	handlePresetClick: function(event){
 		event.preventDefault();
-		PubSub.publish("/preset/selected", JSON.parse(event.target.dataset.state));
+		PubSub.publish("/preset/selected", parseInt(event.target.dataset.index, 10));
 	}
 
 };

@@ -51,8 +51,8 @@ Game.prototype = {
 
 		PubSub.subscribe("/preset/selected", function(event){
 			clearInterval(this.interval);
-			var state = event.detail;
-			this.board.state = state;
+			var index = event.detail;
+			this.board.state = this.board.presets[index].state;
 			this.publish();
 		}.bind(this));
 

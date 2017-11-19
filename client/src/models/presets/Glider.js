@@ -1,5 +1,5 @@
-var Spaceship = {
-	name: "Spaceship",
+var Glider = {
+	name: "Glider",
 	state: [
 		[false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
 		[false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
@@ -24,4 +24,4 @@ var Spaceship = {
 	]
 };
 
-module.exports = Spaceship;
+module.exports = Glider;
