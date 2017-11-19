@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Conway's Game Of Life</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Quicksand" rel="stylesheet">
+	<link rel="stylesheet" href="./public/css/main.css">
+
+	<script src="/client/public/bundle.js"></script>
+</head>
+<body>
+	<h1>Conway's Game Of Life</h1>
+	<form>
+		<div id="buttons">
+			<button id="start">Start</button>
+			<button id="stop">Stop</button>
+			<button id="reset">Reset</button>
+			<button id="random">Random</button>
+		</div>
+		<div id="speedControls">
+			<input id="speed" type="range" min=250 max=500 value=250 step=5>
+			<p id="speedDisplay">Tick Speed: 250ms</p>
+		</div>
+	</form>
+
+	<div id="wrapper">
+		<div id="gameWrapper">
+			<div id="game"></div>
+		</div>
+		<div id="info">
+			<h2>Instructions</h2>
+			<p>Click on the cells to seed the game, or choose "random" for a random selection.</p>
+			<p>Then, click start.</p>
+			<h2>Preset Patterns</h2>
+			<div id="presets">
+
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
