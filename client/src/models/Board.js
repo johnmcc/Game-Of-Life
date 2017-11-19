@@ -3,10 +3,11 @@ var get = require("lodash/get");
 var forEach = require("lodash/foreach");
 
 var Glider = require("./presets/Glider");
+var Lwss = require("./presets/Spaceship");
 
 var Board = function(){
 	this.state = [];
-	this.presets = [Glider];
+	this.presets = [Glider, Lwss];
 	this.resetState();
 	this.announcePresets();
 }
